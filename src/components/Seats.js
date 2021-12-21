@@ -1,32 +1,36 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import UpperSection from "./UpperSection";
 import ConfirmationButton from "./ConfirmationButton";
 import axios from "axios";
-import {Link} from 'react-router-dom';
 import styled from "styled-components";
+import AppFooter from "./AppFooter";
+import Selection from "./Selection";
 
-// "https://mock-api.driven.com.br/api/v4/cineflex/seats/book-many"
+
 
 export default function Seats(){
-    const [Seats, setSeats] = useState("");
     const [Name, setName] = useState("");
     const [CPF, setCPF] = useState("");
-    const {} = useParams();
+    const [selectedSeats, setselectedSeats] = useState("");
+      useEffect(() => {
+      const promise = axios.get("https://mock-api.driven.com.br/api/v4/cineflex/seats/book-many")
+      promise.then((response) => {
+        setselectedSeats(response.data);
+      });
+    }, []);
+         
     return(
         <>
         <UpperSection>
-            <Span> Selecione o(s) assento(s) </Span>  
+            <Selection> Selecione o(s) assento(s) </Selection>  
         </UpperSection>
-
+        
         <ImportantInfo> Nome do comprador:</ImportantInfo>
         <Input placeholder="Digite seu CPF..." value={Name} onChange={e => setName(e.target.value)}/>
         <ImportantInfo> CPF do comprador: </ImportantInfo>
         <Input placeholder="Digite seu nome..." value={CPF} onChange={e => setCPF(e.target.value)} />
         <ConfirmationButton>Reservar assento(s)</ConfirmationButton>
-        <AppFooter>
-            
-        </AppFooter>
+        <AppFooter/> 
         </>
     );
 }
@@ -51,6 +55,4 @@ const Input = styled.input `
     letter-spacing: 0em;
     text-align: left;
     color: #AFAFAF;
-}
- `;
-
+  }`;   
